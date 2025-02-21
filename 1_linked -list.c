@@ -1,4 +1,4 @@
- #include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 
@@ -12,7 +12,7 @@ Node* creatnode(int val){
   Node* newnode=(Node*)malloc(sizeof(Node));
   if(!newnode){
     perror("Mernery alloction faild");
-    //assert(false);
+    assert(0);
     return NULL;
   }
   else{
@@ -44,11 +44,19 @@ void addnode_tail(Node** tail,Node** list,int val){
   }
 }
 
+enum intolist{
+  nofindlist,
+  listlower,
+  normal
+};
+
 //中间插入
-void addnode_middle(Node** middle,int pos,int val){
+enum intolist addnode_middle(Node** middle,int pos,int val){
   Node* newnode=creatnode(val);
   if(!*middle){
     //assert(false);
+    printf("nofindlist");
+    return nofindlist;
   }
   else{
     Node* current=*middle;
@@ -58,11 +66,15 @@ void addnode_middle(Node** middle,int pos,int val){
       if(current->next==NULL)
       {
         //assert(false);
+        printf("listlower: %d 不能加入，list后面缺少 %d 位",val,pos+1);
+        printf("\n");
+        return listlower;
       }
       current=current->next;
     }
     newnode->next=current->next;
     current->next=newnode;
+    return normal;
   }
 }
 
@@ -72,11 +84,30 @@ void turnlist(Node** list){
   Node* temp=NULL;
   while(*list){
   temp=*list;
+  //temp=(*list)->next;temp->next改变导致链表下一个节点会丢失
   *list=(*list)->next;
   temp->next=turn;
   turn=temp;
   }
   *list=turn;
+}
+//打印链表
+void printflist(Node** list){
+  Node* current=*list;
+  if(current == NULL)printf("空链表");
+  while(current){
+    printf("%d ",current->val);
+    current=current->next;
+  }
+}
+//清除链表释放内存
+void clearlist(Node** list){
+  Node* current=*list;
+  while(current){
+    *list=(*list)->next;
+    free(current);
+    current=*list;
+  }
 }
 
 int main()
@@ -92,10 +123,8 @@ int main()
   addnode_middle(&l1,6,8);
   
   turnlist(&l1);
-  Node* current=l1;
-  while(current){
-  printf("%d",current->val);
-  current=current->next;
-  }
+  printflist(&l1);
+  clearlist(&l1);
+  printflist(&l1);
   return 0;
 }   
