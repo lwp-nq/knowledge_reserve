@@ -2,129 +2,154 @@
 #include <stdlib.h>
 #include <assert.h>
 
-typedef struct ListNode{
-  int val;
-  struct ListNode* next;
+typedef struct ListNode {
+    int val;
+    struct ListNode* next;
 }Node;
 
-//å¢åŠ èŠ‚ç‚¹
-Node* creatnode(int val){
-  Node* newnode=(Node*)malloc(sizeof(Node));
-  if(!newnode){
-    perror("Mernery alloction faild");
-    assert(0);
-    return NULL;
-  }
-  else{
-    newnode->val=val;
-    newnode->next=NULL;
-    return newnode;
-  }
+//Ôö¼Ó½Úµã
+Node* creatnode(int val) {
+    Node* newnode = (Node*)malloc(sizeof(Node));
+    if (!newnode) {
+        perror("Mernery alloction faild");
+        assert(0);
+        return NULL;
+    }
+    else {
+        newnode->val = val;
+        newnode->next = NULL;
+        return newnode;
+    }
 }
 
-//å¤´æ’æ³•
-void addnode_head(Node** head,int val){
-  Node* newnode=creatnode(val);
-  if(!*head){*head=newnode;}
-  else{
-    newnode->next=*head;
-    *head=newnode;
-  }
+//Í·²å·¨
+void addnode_head(Node** head, int val) {
+    Node* newnode = creatnode(val);
+    if (!*head) { *head = newnode; }
+    else {
+        newnode->next = *head;
+        *head = newnode;
+    }
 }
-//å°¾æ’æ³•
-void addnode_tail(Node** tail,Node** list,int val){
-  Node* newnode=creatnode(val);
-  if(*tail==NULL){
-  *tail=newnode;
-  *list=*tail;
-  }
-  else{
-  (*list)->next=newnode;
-  *list=newnode;
-  }
+//Î²²å·¨
+void addnode_tail(Node** tail, Node** list, int val) {
+    Node* newnode = creatnode(val);
+    if (*tail == NULL) {
+        *tail = newnode;
+        *list = *tail;
+    }
+    else {
+        (*list)->next = newnode;
+        *list = newnode;
+    }
 }
 
-enum intolist{
-  nofindlist,
-  listlower,
-  normal
+enum intolist {
+    nofindlist,
+    listlower,
+    normal
 };
 
-//ä¸­é—´æ’å…¥
-enum intolist addnode_middle(Node** middle,int pos,int val){
-  Node* newnode=creatnode(val);
-  if(!*middle){
-    //assert(false);
-    printf("nofindlist");
-    return nofindlist;
-  }
-  else{
-    Node* current=*middle;
-    pos=pos-1;
-    while(pos){
-      pos--;
-      if(current->next==NULL)
-      {
+//ÖĞ¼ä²åÈë
+enum intolist addnode_middle(Node** middle, int pos, int val) {
+    Node* newnode = creatnode(val);
+    if (!*middle) {
         //assert(false);
-        printf("listlower: %d ä¸èƒ½åŠ å…¥ï¼Œliståé¢ç¼ºå°‘ %d ä½",val,pos+1);
-        printf("\n");
-        return listlower;
-      }
-      current=current->next;
+        printf("nofindlist");
+        return nofindlist;
     }
-    newnode->next=current->next;
-    current->next=newnode;
-    return normal;
-  }
+    else {
+        Node* current = *middle;
+        pos = pos - 1;
+        while (pos) {
+            pos--;
+            if (current->next == NULL)
+            {
+                //assert(false);
+                printf("listlower: %d ²»ÄÜ¼ÓÈë£¬listºóÃæÈ±ÉÙ %d Î»", val, pos + 1);
+                printf("\n");
+                return listlower;
+            }
+            current = current->next;
+        }
+        newnode->next = current->next;
+        current->next = newnode;
+        return normal;
+    }
 }
 
-//åè½¬é“¾è¡¨
-void turnlist(Node** list){
-  Node* turn=NULL;
-  Node* temp=NULL;
-  while(*list){
-  temp=*list;
-  //temp=(*list)->next;temp->nextæ”¹å˜å¯¼è‡´é“¾è¡¨ä¸‹ä¸€ä¸ªèŠ‚ç‚¹ä¼šä¸¢å¤±
-  *list=(*list)->next;
-  temp->next=turn;
-  turn=temp;
-  }
-  *list=turn;
+//·´×ªÁ´±í
+void turnlist(Node** list) {
+    Node* turn = NULL;
+    Node* temp = NULL;
+    while (*list) {
+        temp = *list;
+        //temp=(*list)->next;temp->next¸Ä±äµ¼ÖÂÁ´±íÏÂÒ»¸ö½Úµã»á¶ªÊ§
+        *list = (*list)->next;
+        temp->next = turn;
+        turn = temp;
+    }
+    *list = turn;
 }
-//æ‰“å°é“¾è¡¨
-void printflist(Node** list){
-  Node* current=*list;
-  if(current == NULL)printf("ç©ºé“¾è¡¨");
-  while(current){
-    printf("%d ",current->val);
-    current=current->next;
-  }
+//´òÓ¡Á´±í
+void printflist(Node** list) {
+    Node* current = *list;
+    if (current == NULL)printf("¿ÕÁ´±í");
+    while (current) {
+        printf("%d ", current->val);
+        current = current->next;
+    }
 }
-//æ¸…é™¤é“¾è¡¨é‡Šæ”¾å†…å­˜
-void clearlist(Node** list){
-  Node* current=*list;
-  while(current){
-    *list=(*list)->next;
-    free(current);
-    current=*list;
-  }
+//Çå³ıÁ´±íÊÍ·ÅÄÚ´æ
+void clearlist(Node** list) {
+    Node* current = *list;
+    while (current) {
+        *list = (*list)->next;
+        free(current);
+        current = *list;
+    }
+}
+
+typedef struct listlonger {
+    int count;
+    Node list;
+}longer;
+
+//¼ÆÊıÁ´±í³¤¶È
+longer listcount(Node* list)//´«ÈëÁ´±íµÄÍ·µØÖ·£¬Í·µØÖ·Ö±½Ó¸´ÖÆµÄÂğ£¬»á·¢Éú¸Ä±äÂğ£¿
+{
+    longer* listcount = (longer*)malloc(sizeof(longer));
+    int count = 0;
+    listcount->list = *list;//½«Á´±íÖµ¸´ÖÆ¸ølist count½á¹¹Ìåºó£¬ÊÇ²»ÊÇÓ¦¸Ã°ÑlistÔÚÍâÃæfreeÁË
+    while (list) {
+        list = list->next;//ÎªÉ¶Á´±íÍ·µØÖ··¢ÉúÁË±ä»¯£¬Íâ²¿µÄÁ´±íÃ»ÓĞ·¢Éú¸Ä±ä£¬Õâ¸öµØ·½Ã»ÓĞÏëÃ÷°×
+        count++;
+    }
+    listcount->count = count;
+    return *listcount;//·µ»Ø½á¹¹ÌåÖµ¶ø²»ÊÇµØÖ·
 }
 
 int main()
 {
-  Node* l1=NULL;
-  Node* l1list=NULL;
-  addnode_tail(&l1,&l1list,1);
-  addnode_tail(&l1,&l1list,9);
-  addnode_tail(&l1,&l1list,3);
-  addnode_head(&l1,6);
-  addnode_middle(&l1,2,8);
-  addnode_tail(&l1,&l1list,1);
-  addnode_middle(&l1,6,8);
-  
-  turnlist(&l1);
-  printflist(&l1);
-  clearlist(&l1);
-  printflist(&l1);
-  return 0;
-}   
+    Node* l1 = NULL;
+    Node* l1list = NULL;
+    addnode_tail(&l1, &l1list, 1);
+    addnode_tail(&l1, &l1list, 9);
+    addnode_tail(&l1, &l1list, 3);
+    addnode_head(&l1, 6);
+    addnode_middle(&l1, 2, 8);
+    addnode_tail(&l1, &l1list, 1);
+    addnode_middle(&l1, 6, 8);
+
+    turnlist(&l1);
+    printflist(&l1);
+    listcount(l1);
+    printf("   Á´±í³¤%d ", listcount(l1).count);
+    Node l2 = listcount(l1).list;
+    Node* l3 = &l2;
+    //Node* l3 = &(listcount(l1).list);ÎªÊ²Ã´²»ÄÜÕâÑù×ÓĞ´
+    printflist(&l3);
+    clearlist(&l1);
+    printflist(&l1);
+    return 0;
+}
