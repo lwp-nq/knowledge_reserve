@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -111,6 +110,7 @@ void printflist(Node** list) {
         printf("%d ", current->val);
         current = current->next;
     }
+    printf("\n");
 }
 //清除链表释放内存
 void clearlist(Node** list) {
@@ -120,6 +120,30 @@ void clearlist(Node** list) {
         free(current);
         current = *list;
     }
+}
+
+//删除单个节点
+void clearlistnode(longer* list, int pos){
+  Node* listl=list->list;
+  Node** list2=&list->list;
+  if(pos == 1){
+    listl = (*list2)->next;
+    free(*list2);
+    list->list = listl;
+    return;
+  }
+  while(pos-1){
+    list->list = *list2;//将要去掉的节点的上一个节点地址保留
+    list2 = &(*list2)->next;//将二级指针指向要去掉的节点
+    //*list2 = (*list2)->next;不可以这样写，会改变链表头地址导致list->list也改变，list2将自己移动到下一个节点
+    pos--;
+  }
+  //(list->list)->next = NULL;
+  (list->list)->next = (*list2)->next;
+  
+  //*list2 = NULL;
+  free(*list2);
+  list->list = listl;
 }
 /*
 typedef struct listlonger {
@@ -157,7 +181,11 @@ int main()
 
  //   turnlist(&l1.list);
     printflist(&l1.list);
-    printf("   链表长%d ",l1.count);
+    printf("   链表长%d \n",l1.count);
+    turnlist(&l1.list);
+    printflist(&l1.list);
+    clearlistnode(&l1,5);
+    printflist(&l1.list);
 /*    Node l2 = listcount(l1).list;
     Node* l3 = &l2;
     //Node* l3 = &(listcount(l1).list);为什么不能这样子写
